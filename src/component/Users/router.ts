@@ -1,6 +1,6 @@
 import { Router } from "express";
 import {
-  // RegisterUser,
+  RegisterUser,
   // forgotPassword,
   // resetPassword,
   // Login,
@@ -17,7 +17,7 @@ import { AuthMiddleware } from "../../lib/middleware/auth";
 
 const router = Router();
 
-// router.post("/register/user", RegisterUser);
+router.post("/user/register", RegisterUser);
 // router.post("/login", Login);
 // router.post("/forgotPassword", forgotPassword);
 // router.post("/resetPassword", resetPassword);

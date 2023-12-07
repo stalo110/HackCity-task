@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import Jwt, { JwtPayload } from "jsonwebtoken";
-import { User, UserModel } from "../../component/Users/model";
+import { Users, UsersModel } from "../../component/Users/model";
 
 export class AuthMiddleware {
   static Authenticate =
@@ -20,9 +20,9 @@ export class AuthMiddleware {
         }
 
         const { id, exp } = verified as JwtPayload;
-        const user = (await UserModel.findOne({
+        const user = (await UsersModel.findOne({
           where: { id },
-        })) as unknown as User;
+        })) as unknown as Users;
         if (!user) {
           return res.status(401).json({ error: "unauthorized" });
         }
@@ -37,11 +37,6 @@ export class AuthMiddleware {
           }
         }
 
-        // Get the current time in seconds since the UNIX epoch
-
-        if (!auth.includes(user.role)) {
-          return res.status(401).json({ error: "Unauthorized" });
-        }
         req.user = user.id;
         next();
       } catch (error) {
