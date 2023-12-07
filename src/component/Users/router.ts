@@ -3,7 +3,7 @@ import {
   RegisterUser,
   // forgotPassword,
   // resetPassword,
-  // Login,
+  Login,
   // OneEmployee,
   // getEmployee,
   // updateEmployee,
@@ -18,7 +18,7 @@ import { AuthMiddleware } from "../../lib/middleware/auth";
 const router = Router();
 
 router.post("/user/register", RegisterUser);
-// router.post("/login", Login);
+router.post("/user/login", Login);
 // router.post("/forgotPassword", forgotPassword);
 // router.post("/resetPassword", resetPassword);
 // router.post("/login", Login);

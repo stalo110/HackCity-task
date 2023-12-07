@@ -36,7 +36,7 @@ export const RegisterUser = async (req: Request, res: Response) => {
       firstName,
       lastName,
       phone,
-      Password,
+      password, // Change from Password to password for consistency
       forgotPassword,
       dateOfBirth,
     } = req.body;
@@ -44,16 +44,15 @@ export const RegisterUser = async (req: Request, res: Response) => {
     const validateResult = registerUsersSchema.validate(req.body, option);
 
     if (validateResult.error) {
-      return res
-        .status(400)
-        .json({ success: false, error: validateResult.error.details[0].message });
+      return res.status(400).json({ success: false, error: validateResult.error.details[0].message });
     }
 
     // Check if user exists
-    const user = await UsersModel.findOne({
+    const userExists = await UsersModel.findOne({
       where: { email: email },
     });
-    if (user) {
+
+    if (userExists) {
       return res.status(400).json({ success: false, error: "Email already exists" });
     }
 
@@ -61,10 +60,14 @@ export const RegisterUser = async (req: Request, res: Response) => {
     const random = Math.floor(Math.random() * 1000000);
     const usersId = `${firstName.slice(0, 2)}${random}`;
 
+    // Hash the password before storing it
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     const newUser = await UsersModel.create({
       ...validateResult.value,
       id,
       usersId,
+      password: hashedPassword, // Store the hashed password
     });
 
     if (!newUser) {
@@ -85,9 +88,10 @@ export const RegisterUser = async (req: Request, res: Response) => {
       },
     });
   } catch (error) {
-    return res.status(500).json({ success: false, error });
+    return res.status(500).json({ success: false, error: "Internal Server Error" });
   }
 };
+
 
   
 
@@ -95,56 +99,59 @@ export const RegisterUser = async (req: Request, res: Response) => {
 // ============================ LOGIN SECTION ===================== //
 // ============================ ==================== ===================== //
 
-// export const Login = async (req: Request, res: Response) => {
-//   try {
-//     const { email, password } = req.body;
-//     console.log(req.body);
+export const Login = async (req: Request, res: Response) => {
+  try {
+    const { email, password: userPassword } = req.body;
 
-//     const validateResult =   loginUsersSchema.validate(req.body, option);
+    const validateResult = loginUsersSchema.validate(req.body, option);
 
-//     if (validateResult.error) {
-//       return res
-//         .status(400)
-//         .json({ error: validateResult.error.details[0].message });
-//     }
+    if (validateResult.error) {
+      return res.status(400).json({ success: false, error: validateResult.error.details[0].message });
+    }
 
-//     const User = (await UsersModel.findOne({
-//       where: { email: email },
-//     })) as unknown as { [key: string]: string };
+    const user = (await UsersModel.findOne({
+      where: { email: email },
+    })) as unknown as Users;
+    
+    console.log(user);
+    
+    if (!user) {
+      return res.status(400).json({ success: false, error: "Invalid credentials" });
+    }
+    
+    const { id, password: hashedPassword } = user;
+    
+    const validUser = await bcrypt.compare(userPassword, hashedPassword);
+    
+    if (!validUser) {
+      return res.status(400).json({ success: false, error: "Invalid credentials" });
+    }
+    
 
-//     if (!User) {
-//       return res.status(400).json({
-//         error: "Invalid credentials",
-//       });
-//     }
-//     console.log(User);
-//     const { id } = User;
+    const token = jwt.sign({ id }, process.env.JWT_SECRET!, {
+      expiresIn: "1d",
+    });
 
-//     const validUser = await bcrypt.compare(password, User.password);
+    res.cookie("token", token, {
+      httpOnly: true,
+      maxAge: 30 * 24 * 60 * 60 * 1000,
+    });
 
-//     if (!validUser) {
-//       return res.status(400).json({
-//         error: "Invalid credentials",
-//       });
-//     }
+    return res.status(200).json({
+      success: true,
+      message: "User login successful",
+      user: {
+        id,
+        email,
+        // Include other necessary fields if needed
+      },
+      token,
+    });
+  } catch (error) {
+    return res.status(500).json({ success: false, error: "Internal Server Error" });
+  }
+};
 
-//     const token = jwt.sign({ id: User.id }, process.env.JWT_SECRET!, {
-//       expiresIn: "1d",
-//     });
-
-//     res.cookie("token", "token", {
-//       httpOnly: true,
-//       maxAge: 30 * 24 * 60 * 60 * 1000,
-//     });
-//     return res.status(200).json({
-//       message: "SUCCESS",
-//       User,
-//       token,
-//     });
-//   } catch (error) {
-//     res.status(500).json({ error });
-//   }
-// };
 
 // // ============================ EMPLOYEE SECTION ===================== //
 // // ============================ ==================== ===================== //
