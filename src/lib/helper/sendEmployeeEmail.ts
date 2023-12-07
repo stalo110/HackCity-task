@@ -1,5 +1,5 @@
 import nodemailer from "nodemailer";
-import { User, UserModel } from "../../component/Users/model";
+import { Users, UsersModel } from "../../component/Users/model";
 
 const MAIL_CONFIG = {
   host: process.env.SMTP_HOST,

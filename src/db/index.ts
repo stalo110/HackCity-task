@@ -8,24 +8,7 @@ const sequelize = new Sequelize(
     dialect: "mysql",
     host: process.env.DB_HOST,
     port: parseInt(process.env.DB_PORT as string),
-    dialectOptions: {
-      ssl: {
-        require: true,
-        rejectUnauthorized: false,
-      },
-    },
   }
 );
-// const sequelize = new Sequelize("ems", "root", "Okechukwu29", {
-//   dialect: "mysql",
-//   host: "localhost",
-//   port: parseInt(process.env.DB_PORT as string),
-//   dialectOptions: {
-//     ssl: {
-//       require: true,
-//       rejectUnauthorized: false,
-//     },
-//   },
-// });
 
 export default sequelize;

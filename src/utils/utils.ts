@@ -43,7 +43,8 @@ export const comparePasswords = (
   return bcryptjs.compare(password, hashedPassword);
 };
 
-export const registerUserSchema = Joi.object().keys({
+
+export const registerUsersSchema = Joi.object().keys({
   email: Joi.string().trim().lowercase().email().required(),
   firstName: Joi.string().required(),
   lastName: Joi.string().required(),
@@ -57,48 +58,8 @@ export const registerUserSchema = Joi.object().keys({
     .label("Confirm password")
     .messages({ "any.only": "{{#label}} does not match" }),
   phone: Joi.string().required(),
+  dateOfBirth: Joi.date().required(),
 });
-
-export const registerEmployeeSchema = Joi.object().keys({
-  email: Joi.string().trim().lowercase().email().required(),
-  firstName: Joi.string().required(),
-  lastName: Joi.string().required(),
-  phone: Joi.string(),
-  role: Joi.string(),
-  workSchedule: Joi.string().required(),
-  endTime: Joi.string().required(),
-  startTime: Joi.string().required(),
-  DateOfBirth: Joi.date(),
-  preferredName: Joi.string(),
-  WorkLocation: Joi.string(),
-  salary: Joi.string(),
-  bankName: Joi.string().required(),
-  accountNumber: Joi.string().required(),
-  accountName: Joi.string().required(),
-  JobTitle: Joi.string(),
-  nameOfEmergencyContact: Joi.string(),
-  relationshipWithEmergencyContact: Joi.string(),
-  phoneNumberOfEmergencyContact: Joi.string(),
-  isTeamLead: Joi.boolean(),
-  DateOfEmployment: Joi.date(),
-  employee_Department: Joi.string().required(),
-  employee_Status: Joi.string(),
-  emergency_contact: Joi.string(),
-  image: Joi.string(),
-});
-
-export const updateEmployeeSchema = Joi.object().keys({
-  email: Joi.string().trim().lowercase().email(),
-  id: Joi.string().required(),
-  firstName: Joi.string(),
-  lastName: Joi.string(),
-  preferredName: Joi.string(),
-  DateOfBirth: Joi.date(),
-  address: Joi.string(),
-  City_State:  Joi.string(),
-  Zip_code: Joi.number(),
-});
-
 
 export const option = {
   abortEarly: false,
@@ -108,6 +69,20 @@ export const option = {
     },
   },
 };
+
+export const editUsersSchema = Joi.object().keys({
+  email: Joi.string().trim().lowercase().email(),
+  id: Joi.string().required(),
+  firstName: Joi.string(),
+  lastName: Joi.string(),
+  password: Joi.string(),
+  phone: Joi.string().required(),
+  DateOfBirth: Joi.date(),
+});
+
+export const forgotPasswordSchema = Joi.object().keys({
+  email: Joi.string().trim().lowercase().required(),
+});
 
 export const verifyCode = Joi.object().keys({
   email: Joi.string().trim().lowercase().email().required(),
@@ -124,11 +99,10 @@ export const resetPasswordSchema = Joi.object().keys({
     .label("Confirm password")
     .messages({ "any.only": "{{#label}} does not match" }),
 });
-export const forgotPasswordSchema = Joi.object().keys({
-  email: Joi.string().trim().lowercase().required(),
-});
 
-export const loginUserSchema = Joi.object().keys({
+
+
+export const loginUsersSchema = Joi.object().keys({
   email: Joi.string().trim().lowercase().required(),
   password: Joi.string()
     .trim()
@@ -136,41 +110,8 @@ export const loginUserSchema = Joi.object().keys({
     .required(),
 });
 
-export const resendVerificationOtpSchema = Joi.object().keys({
-  email: Joi.string().trim().lowercase().required(),
-});
 
-export const resendResetPasswordOtpSchema = Joi.object().keys({
-  email: Joi.string().trim().lowercase().required(),
-});
-
-// export const updateEmployeeSchema = Joi.object().keys({
-//   id: Joi.string().required(),
-//   email: Joi.string().trim().lowercase().email().required(),
-//   firstName: Joi.string().optional(),
-//   lastName: Joi.string().optional(),
-//   phone: Joi.string().optional(),
-//   JobTitle: Joi.string().optional(),
-//   isTeamLead: Joi.boolean().optional(),
-//   EmploymentStatus: Joi.string().optional(),
-//   employee_Department: Joi.string().optional(),
-// });
-
-export const updateProfilePictureSchema = Joi.object().keys({
-  id: Joi.string().required(),
-  image: Joi.any().meta({ swaggerType: 'file' }).required(),
-});
-
-// export const updateEmployeePasswordSchema = Joi.object().keys({
-//   password: Joi.string().required(),
-//   confirm_password: Joi.any()
-//     .equal(Joi.ref("password"))
-//     .required()
-//     .label("Confirm password")
-//     .messages({ "any.only": "{{#label}} does not match" }),
-// });
-
-export const updateEmployeePasswordSchema = Joi.object().keys({
+export const updateUsersPasswordSchema = Joi.object().keys({
   id: Joi.string().required(),
   currentPassword: Joi.string().required(),
   newPassword: Joi.string().required(),
@@ -181,7 +122,8 @@ export const updateEmployeePasswordSchema = Joi.object().keys({
     .messages({ "any.only": "{{#label}} does not match" }),
 });
 
-export const createLeaveRequest = Joi.object().keys({
+
+export const createPosts = Joi.object().keys({
   employeeId: Joi.string().min(8).required(),
   firstName: Joi.string().required(),
   lastName: Joi.string().required(),
@@ -198,10 +140,11 @@ export const createLeaveRequest = Joi.object().keys({
   attachment: Joi.string().optional(),
 });
 
-export const updateleaveRequest = Joi.object().keys({
+export const updatePosts = Joi.object().keys({
   status: Joi.string().required(),
 });
-export const createPayriseRequest = Joi.object().keys({
+
+export const createCategories = Joi.object().keys({
   firstName: Joi.string().required(),
   lastName: Joi.string().required(),
   department: Joi.string().required(),
@@ -215,39 +158,10 @@ export const createPayriseRequest = Joi.object().keys({
   employeeId: Joi.string().required(),
 });
 
-export const updatePayriseRequest = Joi.object().keys({
+export const updateCategories = Joi.object().keys({
   status: Joi.string().required(),
 });
 
-export const ProjectSchema = Joi.object().keys({
-  startDate: Joi.date().required(),
-  endDate: Joi.date().required(),
-  projectTitle: Joi.string().required(),
-  description: Joi.string().required(),
-  priority: Joi.string().required(),
-  Task: Joi.array().items(Joi.string()),
-});
-export const UpdateProjectSchema = Joi.object().keys({
-  projectStatus: Joi.string().required(),
-});
-export const AssignMemberSchema = Joi.object().keys({
-  members: Joi.array().items(Joi.string()).required(),
-});
 
-export const CreateTaskSchema = Joi.array().items(
-  Joi.object({
-    title: Joi.string().required(),
-    description: Joi.string().required(),
-    assignedTo: Joi.string(),
-    startDate: Joi.date().required(),
-    endDate: Joi.date().required(),
-    projectId: Joi.string().required(),
-  })
-);
 
-export const updateTaskRequest = Joi.object().keys({
-  status: Joi.string().required(),
-});
-export const assignTaskSchema = Joi.object().keys({
-  assignedTo: Joi.string().required(),
-});
+

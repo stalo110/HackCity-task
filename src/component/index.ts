@@ -1,22 +1,19 @@
-import UsersRouter from "./Users/router";
-import CategoriesRouter from "./Leave/router";
-import PostRouter from "./Categories/router";
-import AminRouter from "./Posts/router";
+// import UsersRouter from "./Users/router";
+// import CategoriesRouter from "./Categories/router";
+// import PostRouter from "./Posts/router";
+// import AminRouter from "./Admin/router";
 
 export = {
-  user: {
-    routes: UserRouter,
-  },
-  leave: {
-    routes: LeaveRouter,
-  },
-  PayRise: {
-    routes: PayRise,
-  },
-  project: {
-    routes: ProjectRouter,
-  },
-  task: {
-    routes: TaskRouter,
-  },
+  // users: {
+  //   routes: UsersRouter,
+  // },
+  // Categories: {
+  //   routes: CategoriesRouter,
+  // },
+  // Posts: {
+  //   routes: PostRouter,
+  // },
+  // Admin: {
+  //   routes: AminRouter,
+  // },
 };
